@@ -14,3 +14,4 @@ RUN composer install
 CMD php artisan serve --host=0.0.0.0 --port=10000
 RUN cp .env.example .env || true
 RUN php artisan key:generate || true
+RUN php artisan key:generate --force
