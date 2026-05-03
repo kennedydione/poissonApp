@@ -2,7 +2,15 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-8">
-    <h1 class="text-2xl md:text-3xl font-bold mb-6">Gestion des Commandes</h1>
+    <div class="flex items-center gap-4 mb-6">
+        <a href="{{ route('admin.dashboard') }}" class="bg-gray-500 text-white px-3 py-2 rounded-lg hover:bg-gray-600 flex items-center gap-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            Retour
+        </a>
+        <h1 class="text-2xl md:text-3xl font-bold">Gestion des Commandes</h1>
+    </div>
 
     @if(session('success'))
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
@@ -41,10 +49,12 @@
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Téléphone</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Poisson</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantité</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prix Total</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Adresse</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -58,6 +68,9 @@
                                 <div>{{ $order->user->name }}</div>
                                 <div class="text-xs text-gray-400">{{ $order->user->email }}</div>
                             </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ $order->user->phone ?? '-' }}
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $order->fish->name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $order->quantity }} kg</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-semibold">
@@ -65,6 +78,13 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {{ $order->delivery ? 'Livraison' : 'Récupération' }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                @if($order->delivery && $order->delivery_address)
+                                    <span class="text-xs">{{ Str::limit($order->delivery_address, 30) }}</span>
+                                @else
+                                    <span class="text-gray-400">-</span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
@@ -110,7 +130,6 @@
                                                 </div>
                                             </form>
                                         </div>
-                                    </div>
                                 @else
                                     @if($order->rejection_reason)
                                         <button onclick="showRejectionReason('{{ $order->rejection_reason }}')" class="text-gray-500 hover:text-gray-700 text-xs">
@@ -124,7 +143,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="9" class="px-6 py-4 text-center text-gray-500">
+                            <td colspan="11" class="px-6 py-4 text-center text-gray-500">
                                 Aucune commande trouvée.
                             </td>
                         </tr>
@@ -132,7 +151,6 @@
                 </tbody>
             </table>
         </div>
-    </div>
 
     <div class="mt-4">
         {{ $orders->links() }}
@@ -146,9 +164,7 @@
             <div class="flex justify-end">
                 <button onclick="closeViewReasonModal()" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Fermer</button>
             </div>
-        </div>
     </div>
-</div>
 
 <script>
 function openRejectModal(orderId) {

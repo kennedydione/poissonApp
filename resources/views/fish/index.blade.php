@@ -2,7 +2,15 @@
 
 @section('content')
 <div class="max-w-6xl mx-auto">
-    <h1 class="text-3xl font-bold mb-6">Poissons Disponibles</h1>
+    <div class="flex items-center gap-4 mb-6">
+        <a href="{{ route('home') }}" class="bg-gray-500 text-white px-3 py-2 rounded-lg hover:bg-gray-600 flex items-center gap-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            Retour
+        </a>
+        <h1 class="text-3xl font-bold">Poissons Disponibles</h1>
+    </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @forelse($fish as $fishItem)

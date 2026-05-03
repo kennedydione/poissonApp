@@ -6,7 +6,6 @@ use App\Models\Order;
 use App\Models\Fish;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Notification;
 
 class OrderController extends Controller
 {
@@ -28,6 +27,11 @@ class OrderController extends Controller
             'quantity' => 'required|integer|min:1|max:' . $maxQuantity,
             'type' => 'required|in:pickup,delivery',
             'payment_method' => 'required|in:cash,wave,orange_money,free',
+            // Validation conditionnelle pour la livraison
+            'delivery_address' => 'required_if:type,delivery|string|max:255',
+            'delivery_city' => 'required_if:type,delivery|string|max:100',
+            'delivery_phone' => 'required_if:type,delivery|string|max:20',
+            'delivery_notes' => 'nullable|string|max:500',
         ]);
 
         $totalPrice = $request->quantity * $fish->price_per_kg;
@@ -45,6 +49,11 @@ class OrderController extends Controller
             'type' => $request->type,
             'total_price' => $totalPrice,
             'payment_method' => $request->payment_method,
+            // Nouveaux champs de livraison
+            'delivery_address' => $request->type === 'delivery' ? $request->delivery_address : null,
+            'delivery_city' => $request->type === 'delivery' ? $request->delivery_city : null,
+            'delivery_phone' => $request->type === 'delivery' ? $request->delivery_phone : null,
+            'delivery_notes' => $request->type === 'delivery' ? $request->delivery_notes : null,
         ]);
 
         // Decrease the fish quantity available
