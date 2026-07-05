@@ -18,14 +18,14 @@ class Order extends Model
         'total_price',
         'approved_at',
         'payment_method',
-    ];
+        'rejection_reason',
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'approved_at' => 'datetime',
     ];
-
+    ]
     public function user()
     {
         return $this->belongsTo(User::class);

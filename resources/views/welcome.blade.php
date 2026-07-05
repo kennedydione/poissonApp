@@ -462,7 +462,7 @@
                 </div>
                 <div class="col-6 col-md-3">
                     <i class="bi bi-clock fs-1 mb-3"></i>
-                    <div class="h2 fw-bold"><3h</div>
+                    <div class="h2 fw-bold"><3h></div>
                     <p>Temps de Livraison</p>
                 </div>
         </div>
