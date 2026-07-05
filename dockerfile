@@ -11,7 +11,14 @@ COPY . .
 
 RUN composer install
 
-CMD php artisan serve --host=0.0.0.0 --port=10000
-RUN cp .env.example .env || true
-RUN php artisan key:generate || true
-RUN php artisan key:generate --force
+# Prepare writable storage (SQLite + cache)
+RUN mkdir -p /app/storage /app/bootstrap/cache \
+    && touch /app/storage/database.sqlite \
+    && chmod -R 775 /app/storage /app/bootstrap/cache
+
+# Generate APP_KEY if missing (won't override if already set)
+RUN cp -n .env.example .env || true
+RUN php artisan key:generate --force || true
+
+# Run migrations then start the app
+CMD php artisan migrate --force --no-interaction && php artisan serve --host=0.0.0.0 --port=10000
